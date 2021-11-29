@@ -3,19 +3,19 @@ package com.troy.narutojutsuapp;
 public class JutsuItem {
 
     private int imageResource;
-    private int gifResource;
+    private String imageUrl;
     private String title;
     private String body;
 
-    public JutsuItem( int gifResource,int imageResource, String title,
+    public JutsuItem( String imageUrl,int imageResource, String title,
                       String body) {
-        this.gifResource = gifResource;
+        this.imageUrl = imageUrl;
         this.imageResource = imageResource;
         this.title = title;
         this.body = body;
     }
-    public int getGifResource() {
-        return gifResource;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public int getImageResource() {

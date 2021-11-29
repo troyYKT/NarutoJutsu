@@ -2,13 +2,18 @@ package com.troy.narutojutsuapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -23,25 +28,15 @@ public class JutsuAdapter extends RecyclerView.Adapter<JutsuAdapter.PizzaRecipeV
         this.context = context;
     }
 
-    @NonNull
+
     @Override
-    public JutsuAdapter.PizzaRecipeViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public JutsuAdapter.PizzaRecipeViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.jutsu_item,
                 viewGroup, false);
         PizzaRecipeViewHolder pizzaRecipeViewHolder = new PizzaRecipeViewHolder(view);
         return pizzaRecipeViewHolder;
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull PizzaRecipeViewHolder viewHolder, int i) {
-        JutsuItem jutsuItem = jutsuItems.get(i);
-
-
-        viewHolder.title.setText(jutsuItem.getTitle());
-
-
-
-    }
 
     @Override
     public int getItemCount() {
@@ -52,13 +47,14 @@ public class JutsuAdapter extends RecyclerView.Adapter<JutsuAdapter.PizzaRecipeV
             View.OnClickListener {
 
         public TextView title;
+        public ImageView thumbnail;
 
 
-        public PizzaRecipeViewHolder(@NonNull View itemView) {
+        public PizzaRecipeViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-
+            thumbnail = itemView.findViewById(R.id.gifImageView);
             title = itemView.findViewById(R.id.titleTextView);
 
 
@@ -75,7 +71,7 @@ public class JutsuAdapter extends RecyclerView.Adapter<JutsuAdapter.PizzaRecipeV
 
             Intent intent = new Intent(context, JutsuActivity.class);
             intent.putExtra("imageResource", jutsuItem.getImageResource());
-            intent.putExtra("gifResource", jutsuItem.getGifResource());
+            intent.putExtra("imageUrl", jutsuItem.getImageUrl());
             intent.putExtra("title", jutsuItem.getTitle());
             intent.putExtra("body", jutsuItem.getBody());
 
@@ -83,6 +79,18 @@ public class JutsuAdapter extends RecyclerView.Adapter<JutsuAdapter.PizzaRecipeV
             context.startActivity(intent);
         }
     }
+    @Override
+    public void onBindViewHolder(PizzaRecipeViewHolder viewHolder, int i) {
+        JutsuItem jutsuItem = jutsuItems.get(i);
+        viewHolder.title.setText(jutsuItem.getTitle());
+        String url = jutsuItem.getImageUrl();
+
+
+
+
+
+    }
+
 
 
 }
