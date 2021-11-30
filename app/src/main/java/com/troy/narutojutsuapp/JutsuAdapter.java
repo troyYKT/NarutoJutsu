@@ -2,30 +2,34 @@ package com.troy.narutojutsuapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-
 import java.util.ArrayList;
 
-public class JutsuAdapter extends RecyclerView.Adapter<JutsuAdapter.PizzaRecipeViewHolder> {
+
+public class JutsuAdapter extends RecyclerView.Adapter<JutsuAdapter.PizzaRecipeViewHolder> implements Filterable {
 
     ArrayList<JutsuItem> jutsuItems;
+    ArrayList<JutsuItem> jutsuItemsFull;
     Context context;
 
     public JutsuAdapter(ArrayList<JutsuItem> jutsuItems,
                         Context context) {
         this.jutsuItems = jutsuItems;
         this.context = context;
+        jutsuItemsFull = new ArrayList<>(jutsuItems);
     }
 
 
@@ -91,6 +95,39 @@ public class JutsuAdapter extends RecyclerView.Adapter<JutsuAdapter.PizzaRecipeV
 
     }
 
+    @Override
+    public Filter getFilter() {
+        return JutsuFilter;
+    }
+    private Filter JutsuFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<JutsuItem> filteredList= new ArrayList<>();
 
+            if (constraint == null || constraint.length()==0){
+                filteredList.addAll(jutsuItemsFull);
+            }else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (JutsuItem item: jutsuItemsFull){
+                    if (item.getTitle().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            jutsuItems.clear();
+            jutsuItems.addAll((ArrayList) results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
 }

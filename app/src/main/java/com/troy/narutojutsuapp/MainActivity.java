@@ -1,18 +1,26 @@
 package com.troy.narutojutsuapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Adapter;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
+    private JutsuAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1059,10 +1067,36 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        adapter = new com.troy.narutojutsuapp.JutsuAdapter(jutsuItems, this);
+        adapter =  new JutsuAdapter(jutsuItems, this);
         layoutManager = new LinearLayoutManager(this);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return true;
+    }
+
+
 }
